@@ -1,0 +1,11 @@
+UPDATE mysql.user SET Password=PASSWORD('root') WHERE User='root';
+UPDATE mysql.user SET authentication_string = '' WHERE user = 'root';
+UPDATE mysql.user SET plugin = '' WHERE user = 'root';
+DELETE FROM mysql.user WHERE User='';
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+DROP DATABASE IF EXISTS test;
+DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+CREATE DATABASE wordpress;
+CREATE USER 'wpuser1'@'localhost' IDENTIFIED BY 'secret';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser1'@'localhost';
+FLUSH PRIVILEGES;
