@@ -11,6 +11,9 @@ start:
 
 bash:
 	docker exec -it ft_server bash
+
+save:
+	docker save jaybeest/ft_server:latest | gzip > ft_server_latest.tar.gz
 clean:
 	docker rm $(NAME)
 	docker image rm $(NAME)
