@@ -44,6 +44,9 @@ RUN wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v
 	&& ./mkcert -install && ./mkcert phpmyadmin && ./mkcert wordpress \
 	&& chmod 644 *.pem
 
+# Cleanup
+RUN rm /etc/nginx/sites-enabled/default
+
 EXPOSE 80 443
 
 COPY /srcs/start_container.sh .
