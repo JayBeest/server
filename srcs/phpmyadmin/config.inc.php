@@ -30,10 +30,7 @@ $cfg['Servers'][$i]['auth_type'] = 'cookie';
 $cfg['Servers'][$i]['host'] = 'localhost';
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = true;
-// $cfg['Servers'][$i]['ssl'] = true;
-$cfg['ForceSSL'] = true;
-$cfg['Servers'][$i]['ssl_cert'] = '/root/.local/share/mkcert/rootCA.pem';
-$cfg['Servers'][$i]['ssl_key'] = '/root/.local/share/mkcert/rootCA-key.pem';
+
 /**
  * phpMyAdmin configuration storage settings.
  */
