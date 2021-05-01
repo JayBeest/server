@@ -16,9 +16,11 @@ RUN		apt-get update && apt-get install -y \
 COPY	/srcs/nginx/site.conf /etc/nginx/sites-available/site
 COPY	/srcs/nginx/autoindex_off.sh .
 COPY	/srcs/nginx/autoindex_on.sh .
+COPY	/srcs/start_container.sh .
 RUN		ln -s /etc/nginx/sites-available/site /etc/nginx/sites-enabled/site \
 		&& echo "daemon off;" >> /etc/nginx/nginx.conf \
-		&& chown -R www-data:www-data /var/www/html/
+		&& chown -R www-data:www-data /var/www/html/ \
+		&& chmod +x *.sh
 
 # Setup MariaDB
 COPY	/srcs/mariadb/secure_mysql.sql .
@@ -61,5 +63,4 @@ RUN		rm /var/www/html/index.nginx-debian.html /var/www/html/index.html \
 
 EXPOSE	80 443
 
-COPY	/srcs/start_container.sh .
 CMD		["/bin/bash", "./start_container.sh"]
