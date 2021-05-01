@@ -1,4 +1,4 @@
-UPDATE mysql.user SET Password=PASSWORD('root') WHERE User='root';
+UPDATE mysql.user SET Password=PASSWORD('') WHERE User='root';
 UPDATE mysql.user SET authentication_string = '' WHERE user = 'root';
 UPDATE mysql.user SET plugin = '' WHERE user = 'root';
 DELETE FROM mysql.user WHERE User='';

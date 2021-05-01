@@ -14,6 +14,8 @@ RUN		apt-get update && apt-get install -y \
 
 # Setup Nginx
 COPY	/srcs/nginx/site.conf /etc/nginx/sites-available/site
+COPY	/srcs/nginx/autoindex_off.sh .
+COPY	/srcs/nginx/autoindex_on.sh .
 RUN		ln -s /etc/nginx/sites-available/site /etc/nginx/sites-enabled/site \
 		&& echo "daemon off;" >> /etc/nginx/nginx.conf \
 		&& chown -R www-data:www-data /var/www/html/
@@ -22,6 +24,7 @@ RUN		ln -s /etc/nginx/sites-available/site /etc/nginx/sites-enabled/site \
 COPY	/srcs/mariadb/secure_mysql.sql .
 RUN		service mysql start \
 		&& mysql -sfu root < "secure_mysql.sql" \
+		&& service mysql stop \
 		&& rm secure_mysql.sql
 
 # Setup PHP(MyAdmin)
@@ -35,20 +38,26 @@ RUN		touch /var/www/html/info.php \
 COPY	./srcs/phpmyadmin/config.inc.php /var/www/html/phpmyadmin
 
 # Setup wordpress
-RUN		mkdir /var/www/html/wordpress \
-		&& wget https://wordpress.org/latest.tar.gz \
-		&& tar xvf latest.tar.gz --strip-components=1 -C /var/www/html/wordpress \
-		&& rm latest.tar.gz
+RUN		mkdir /var/www/html/wordpress
 COPY	/srcs/wordpress/wp-config.php /var/www/html/wordpress
+RUN		wget https://wordpress.org/latest.tar.gz \
+		&& tar xvf latest.tar.gz --strip-components=1 -C /var/www/html/wordpress \
+		&& wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+		&& chmod +x wp-cli.phar \
+		&& mv wp-cli.phar /usr/local/bin/wp \
+		&& service mysql start \
+		&& wp core install --url=localhost/wordpress --path=/var/www/html/wordpress --allow-root --title=Example --admin_user=admin --admin_password=secret --admin_email=info@example.com \
+		&& service mysql stop \
+		&& rm latest.tar.gz
 
 # Setup mkcert
 RUN		wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64 -O mkcert \
 		&& chmod +x mkcert \
-		&& ./mkcert -install && ./mkcert phpmyadmin && ./mkcert wordpress \
-		&& chmod 644 *.pem
+		&& ./mkcert -install
 
 # Cleanup
-RUN		rm /var/www/html/index.html && rm /etc/nginx/sites-enabled/default
+RUN		rm /var/www/html/index.nginx-debian.html /var/www/html/index.html \
+		&& rm /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
 
 EXPOSE	80 443
 
