@@ -6,6 +6,6 @@ DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.
 DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 CREATE DATABASE wordpress;
-CREATE USER 'wpuser1'@'localhost' IDENTIFIED BY 'secret';
-GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser1'@'localhost';
+CREATE USER 'wp_user'@'localhost' IDENTIFIED BY 'secret';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wp_user'@'localhost';
 FLUSH PRIVILEGES;
